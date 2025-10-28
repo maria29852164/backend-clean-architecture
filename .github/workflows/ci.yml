@@ -30,13 +30,12 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
-          application_name: YOUR_APP_NAME
-          environment_name: YOUR_ENV_NAME
+          application_name: backend_clean        # Cambiar por el nombre de tu app
+          environment_name: backend_dev        # Cambiar por el nombre del environment
           version_label: ${{ github.sha }}
-          region: us-east-1 # Cambiar según tu región
-          bucket_name: YOUR_S3_BUCKET # Elastic Beanstalk crea uno
-          bucket_key: app-${{ github.sha }}.zip
-          deployment_package: . # o carpeta que contenga dist y package.json
+          region: us-east-1                      # Cambiar si tu región es distinta
+          deployment_package: .                  # Carpeta raíz o ZIP con tu build
+          existing_bucket_name: YOUR_S3_BUCKET  # Bucket de S3 que ya existe
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
