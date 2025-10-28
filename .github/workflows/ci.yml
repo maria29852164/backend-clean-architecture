@@ -36,6 +36,6 @@ jobs:
           region: us-east-1                      # Cambiar si tu región es distinta
           deployment_package: .                  # Carpeta raíz o ZIP con tu build
           existing_bucket_name: YOUR_S3_BUCKET  # Bucket de S3 que ya existe
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
