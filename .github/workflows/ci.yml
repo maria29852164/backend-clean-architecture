@@ -1,72 +1,42 @@
-name: CI/CD
+name: CI/CD NestJS AWS
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  build-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
-        ports: ["3306:3306"]
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - name: Install deps
-        run: npm ci
-      - name: Wait for MySQL
-        run: |
-          until mysqladmin ping -h127.0.0.1 -uroot -proot; do sleep 1; done
-      - name: Run migrations
-        env:
-          DB_HOST: 127.0.0.1
-          DB_USER: root
-          DB_PASS: root
-          DB_NAME: test_db
-        run: npx drizzle-kit migrate:latest
-      - name: Run tests
-        env:
-          DB_HOST: 127.0.0.1
-          DB_USER: root
-          DB_PASS: root
-          DB_NAME: test_db
-        run: npm test -- --runInBand
 
-  build-and-push:
-    needs: build-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: node-version: 22
-      - name: Install deps
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Login to AWS ECR
-        uses: aws-actions/amazon-ecr-login@v2
-      - name: Build, tag, and push image to ECR
-        env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      - name: Deploy to ECS (or App Runner)
-        uses: aws-actions/ecs-deploy-task-definition@v1
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v3
         with:
-        # aquí irían inputs para deploy (task definition, cluster, service)
-        # o usar otro action según infra elegida
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          application_name: YOUR_APP_NAME
+          environment_name: YOUR_ENV_NAME
+          version_label: ${{ github.sha }}
+          region: us-east-1 # Cambiar según tu región
+          bucket_name: YOUR_S3_BUCKET # Elastic Beanstalk crea uno
+          bucket_key: app-${{ github.sha }}.zip
+          deployment_package: . # o carpeta que contenga dist y package.json
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
