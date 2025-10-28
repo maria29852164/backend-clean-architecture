@@ -31,9 +31,18 @@ import {GetSubscriptionStatusUseCase} from "./application/use-cases/get-subscrip
 
         RegisterUserUseCase,
         LoginUserUseCase,
-        ListPlansUseCase,
         SubscribeToPlanUseCase,
         GetSubscriptionStatusUseCase,
+
+        {
+            provide: "IPlanRepository",
+            useClass: PlanRepositoryDrizzle,
+        },
+        {
+            provide: ListPlansUseCase,
+            useFactory: (planRepo: any) => new ListPlansUseCase(planRepo),
+            inject: ["IPlanRepository"],
+        },
     ],
 })
 export class AppModule {}
