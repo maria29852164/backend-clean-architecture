@@ -9,10 +9,18 @@ export class FirestoreLogger {
         console.log('Client Email:', process.env.FIREBASE_CLIENT_EMAIL);
         console.log('Private Key:', process.env.FIREBASE_PRIVATE_KEY?.slice(0, 30), '...');
 
-        this.db = new Firestore({
+       /* this.db = new Firestore({
             projectId: "backend-clean-architecture",
             keyFilename: "./backend-firebase.json",
-        });
+        });*/
+        this.db= new Firestore({
+            projectId: "backend-clean-architecture",
+
+            credentials: {
+                client_email: process.env.FIREBASE_CLIENT_EMAIL,
+                private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+            },
+        })
     }
 
     async log(eventType: string, payload: any, metadata: Record<string, any> = {}) {
