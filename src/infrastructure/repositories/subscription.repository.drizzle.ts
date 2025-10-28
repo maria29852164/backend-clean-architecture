@@ -11,6 +11,13 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepository {
         @Inject("DRIZZLE_CONNECTION") private db: MySql2Database<typeof import("../db/drizzle/schema")>
     ) {}
 
+    async deleteSubscription(userId: string): Promise<void> {
+        await this.db
+            .delete(subscriptions)
+            .where(eq(subscriptions.user_id, userId));
+
+    }
+
     async create(subscription: Subscription) {
         await this.db.insert(subscriptions).values({
             id: subscription.id,

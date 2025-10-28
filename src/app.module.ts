@@ -17,6 +17,7 @@ import {IUserRepository} from "./application/ports/user-repository.port";
 import {ISubscriptionRepository} from "./application/ports/subscription-repository.port";
 import {IPlanRepository} from "./application/ports/plan-repository.port";
 import {UpdateSubscriptionState} from "./application/use-cases/update-subscription.usecase";
+import {ChangeSubscription} from "./application/use-cases/change-subscription.usecase";
 
 @Module({
     imports: [
@@ -54,14 +55,20 @@ import {UpdateSubscriptionState} from "./application/use-cases/update-subscripti
         },
         {
             provide: GetSubscriptionStatusUseCase,
-            useFactory: (subRepo: ISubscriptionRepository) => new GetSubscriptionStatusUseCase(subRepo),
-            inject: ["ISubscriptionRepository"], // <--- importante
+            useFactory: (subRepo: ISubscriptionRepository, planRepo:IPlanRepository) => new GetSubscriptionStatusUseCase(subRepo,planRepo),
+            inject: ["ISubscriptionRepository",'IPlanRepository'],
 
         },
         {
             provide: UpdateSubscriptionState,
             useFactory: (subRepo: ISubscriptionRepository) => new UpdateSubscriptionState(subRepo),
             inject: ["ISubscriptionRepository"],
+        },
+        {
+           provide: ChangeSubscription,
+            useFactory: (subRepo: ISubscriptionRepository,planRepo:IPlanRepository,logger: FirestoreLogger
+            ) => new ChangeSubscription(subRepo,planRepo,logger),
+            inject: ["ISubscriptionRepository",'IPlanRepository',FirestoreLogger],
         },
         {
             provide: SubscribeToPlanUseCase,
