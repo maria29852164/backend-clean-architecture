@@ -42,4 +42,4 @@ jobs:
           version_label: ${{ github.sha }}
           region: us-east-1                           # ajusta según tu región
           deployment_package: deploy.zip              # usamos el ZIP creado
-          existing_bucket_name: YOUR_S3_BUCKET        # bucket existente de EB
+          existing_bucket_name: elasticbeanstalk-us-east-2-070797854721        # bucket existente de EB
