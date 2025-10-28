@@ -16,6 +16,7 @@ import {GetSubscriptionStatusUseCase} from "./application/use-cases/get-subscrip
 import {IUserRepository} from "./application/ports/user-repository.port";
 import {ISubscriptionRepository} from "./application/ports/subscription-repository.port";
 import {IPlanRepository} from "./application/ports/plan-repository.port";
+import {UpdateSubscriptionState} from "./application/use-cases/update-subscription.usecase";
 
 @Module({
     imports: [
@@ -54,6 +55,13 @@ import {IPlanRepository} from "./application/ports/plan-repository.port";
         {
             provide: GetSubscriptionStatusUseCase,
             useFactory: (subRepo: ISubscriptionRepository) => new GetSubscriptionStatusUseCase(subRepo),
+            inject: ["ISubscriptionRepository"], // <--- importante
+
+        },
+        {
+            provide: UpdateSubscriptionState,
+            useFactory: (subRepo: ISubscriptionRepository) => new UpdateSubscriptionState(subRepo),
+            inject: ["ISubscriptionRepository"],
         },
         {
             provide: SubscribeToPlanUseCase,

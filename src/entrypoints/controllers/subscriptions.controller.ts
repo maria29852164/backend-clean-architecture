@@ -1,12 +1,14 @@
-import { Controller, Post, Get, Body, Req } from "@nestjs/common";
+import {Controller, Post, Get, Body, Req, Put} from "@nestjs/common";
 import {SubscribeToPlanUseCase} from "../../application/use-cases/subscribe.usecase";
 import {GetSubscriptionStatusUseCase} from "../../application/use-cases/get-subscription-status.usecase";
+import {UpdateSubscriptionState} from "../../application/use-cases/update-subscription.usecase";
 
 @Controller("subscriptions")
 export class SubscriptionsController {
     constructor(
         private readonly subscribeUseCase: SubscribeToPlanUseCase,
-        private readonly statusUseCase: GetSubscriptionStatusUseCase
+        private readonly statusUseCase: GetSubscriptionStatusUseCase,
+        private readonly updateSubscriptionState: UpdateSubscriptionState
     ) {}
 
     @Post()
@@ -15,8 +17,15 @@ export class SubscriptionsController {
     }
 
     @Get("me")
-    async getStatus(@Req() req: any) {
+    async geStatus(@Req() req: any) {
         const userId = req.user?.sub || req.query.userId; // placeholder
+        console.log('userId ', userId);
         return await this.statusUseCase.execute(userId);
+    }
+    @Put("status")
+    async updateStatusSubscription(@Req() req: any, @Body() body: { status:string, userId: string }) {
+
+        return await this.updateSubscriptionState.execute(body.status, body.userId);
+
     }
 }

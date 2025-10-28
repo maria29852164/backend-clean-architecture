@@ -36,4 +36,24 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepository {
             .set({ status: subscription.status })
             .where(eq(subscriptions.id, subscription.id));
     }
+    async getSubscriptionById(subscriptionId: string): Promise<Subscription | null> {
+        const [result] = await this.db
+            .select()
+            .from(subscriptions)
+            .where(eq(subscriptions.id, subscriptionId))
+
+        if (!result) {
+            return null;
+        }
+
+        return new Subscription(
+            result.id,
+            result.user_id,
+            result.plan_id,
+            result.start_at,
+            result.end_at,
+            result.status as SubscriptionStatus,
+            result.created_at
+        );
+    }
 }
