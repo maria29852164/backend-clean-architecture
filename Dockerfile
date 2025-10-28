@@ -9,6 +9,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+
 # Stage final
 FROM node:22-alpine
 
