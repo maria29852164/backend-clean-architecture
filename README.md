@@ -1,6 +1,6 @@
 ## Requisitos
 * correr npm run seed
-
+* se requiere archivo de configuracion de  backend-firebase.json
 #### explicacion de arquitectura usada
 * domain: se agregaron las entidades plan subscription user
 * applications: se implementaron los ports que son las interfacez de los metodos que usaran los casos de uso.
