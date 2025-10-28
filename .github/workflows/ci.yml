@@ -27,15 +27,19 @@ jobs:
       - name: Build project
         run: npm run build
 
+      # Empaquetar el build en un ZIP para Elastic Beanstalk
+      - name: Create deployment package
+        run: |
+          zip -r deploy.zip . -x "*.git*" "node_modules/*" "*.github/*"
+
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
-          application_name: backend_clean        # Cambiar por el nombre de tu app
-          environment_name: backend_dev        # Cambiar por el nombre del environment
-          version_label: ${{ github.sha }}
-          region: us-east-1                      # Cambiar si tu región es distinta
-          deployment_package: .                  # Carpeta raíz o ZIP con tu build
-          existing_bucket_name: YOUR_S3_BUCKET  # Bucket de S3 que ya existe
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+          application_name: backend_clean             # tu aplicación
+          environment_name: backend_dev               # tu environment
+          version_label: ${{ github.sha }}
+          region: us-east-1                           # ajusta según tu región
+          deployment_package: deploy.zip              # usamos el ZIP creado
+          existing_bucket_name: YOUR_S3_BUCKET        # bucket existente de EB
