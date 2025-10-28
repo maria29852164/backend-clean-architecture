@@ -17,7 +17,7 @@ import * as schema from "./schema";
                     connectionLimit: 10,
                 });
                 // @ts-ignore
-                return drizzle(pool, { schema });
+                return drizzle(pool, { schema , mode:'default'});
             },
         },
     ],
