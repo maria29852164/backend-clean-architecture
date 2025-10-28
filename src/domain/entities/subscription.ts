@@ -8,14 +8,14 @@ export class Subscription {
         public startAt: Date,
         public endAt: Date,
         public status: SubscriptionStatus = 'active',
-        public createdAt: Date = new Date()
+        public createdAt: Date = new Date(),
     ) {}
 
-    public cancel() {
+    cancel() {
         this.status = 'cancelled';
     }
 
-    public checkExpired(now = new Date()) {
-        if (now > this.endAt) this.status = 'expired';
+    isExpired(now = new Date()) {
+        return now > this.endAt;
     }
 }

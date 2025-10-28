@@ -10,6 +10,9 @@ export class User {
     public setPasswordHash(hash: string) {
         this.passwordHash = hash;
     }
+    public  getPasswordHash() {
+        return this.passwordHash ?? '';
+    }
 
     public validatePasswordHash(hash: string) {
         return this.passwordHash === hash;
