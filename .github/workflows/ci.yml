@@ -40,6 +40,6 @@ jobs:
           application_name: backend_clean             # tu aplicación
           environment_name: backend_dev               # tu environment
           version_label: ${{ github.sha }}
-          region: us-east-1                           # ajusta según tu región
+          region: us-east-2                          # ajusta según tu región
           deployment_package: deploy.zip              # usamos el ZIP creado
           existing_bucket_name: elasticbeanstalk-us-east-2-070797854721        # bucket existente de EB
