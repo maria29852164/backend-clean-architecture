@@ -1,4 +1,5 @@
-## ENDPOINTS creados
+## Requisitos
+* correr npm run seed
 
 #### explicacion de arquitectura usada
 * domain: se agregaron las entidades plan subscription user
