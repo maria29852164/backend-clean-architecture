@@ -37,3 +37,7 @@
 ### /subscription/change
 
 ![img_6.png](img_6.png)
+
+### Problemas en el despliegue
+* el actions no logra construir la imagen en elastic
+![img_8.png](img_8.png)
